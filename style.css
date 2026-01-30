@@ -26,15 +26,7 @@ body { margin: 0; font-family: 'Prompt', sans-serif; background: #0d0d0d; color:
     display: flex; align-items: center; justify-content: center; text-align: center; 
     transition: background-image 1s ease-in-out;
 }
-.neon-logo {
-    font-family: 'Jura', sans-serif; font-weight: 700; font-size: clamp(3rem, 10vw, 6rem); color: #fff;
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00de, 0 0 30px #ff00de, 0 0 40px #ff00de, 0 0 55px #ff00de, 0 0 75px #ff00de;
-    animation: flicker 2s infinite alternate; 
-}
-@keyframes flicker {
-    0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #fff, 0 0 10px #fff, 0 0 18px #00aeff, 0 0 38px #00aeff, 0 0 70px #00aeff, 0 0 80px #00aeff, 0 0 100px #00aeff; }
-    20%, 24%, 55% { text-shadow: none; } 
-}
+
 .main-content { padding: 0 50px 50px 50px; }
 .section { margin-top: 40px; padding-top: 20px; /* Add padding for nav link scroll offset */ }
 .section h2 { margin-bottom: 30px; font-size: 28px; padding-bottom: 10px; border-bottom: 2px solid #e50914; display: inline-block; }
