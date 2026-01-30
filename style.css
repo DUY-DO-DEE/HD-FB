@@ -22,7 +22,7 @@ body { margin: 0; font-family: 'Prompt', sans-serif; background: #0d0d0d; color:
 
 .hero {
     height: 60vh;
-    background: linear-gradient(to top, rgba(13,13,13,1), rgba(13,13,13,0.3)), url("https://images.pexels.com/photos/2531709/pexels-photo-2531709.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2") center/cover no-repeat;
+    background: linear-gradient(to top, rgba(13,13,13,1), rgba(13,13,13,0.3)), url("banner.jpg") center/cover no-repeat;
     display: flex; align-items: center; justify-content: center; text-align: center; 
     transition: background-image 1s ease-in-out;
 }
