@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin System | DUYDODEE-HD</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --primary: #ff4e00;
+        --bg-dark: #050505;
+        --bg-card: #141414;
+        --text-light: #e0e0e0;
+    }
+    body { margin: 0; font-family: 'Prompt', sans-serif; background: var(--bg-dark); color: var(--text-light); }
+    
+    /* --- Layout --- */
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    
+    /* --- Login Modal --- */
+    #login-screen {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.95); z-index: 1000;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(10px);
+    }
+    .login-box {
+        background: #1a1a1a; padding: 40px; border-radius: 20px;
+        width: 100%; max-width: 400px; text-align: center;
+        border: 1px solid rgba(255, 78, 0, 0.3);
+        box-shadow: 0 0 30px rgba(255, 78, 0, 0.2);
+    }
+    .login-logo { font-size: 40px; margin-bottom: 20px; display: block; }
+    
+    /* --- Dashboard --- */
+    #dashboard-screen { display: none; } /* Hidden by default */
+    
+    .header { 
+        display: flex; justify-content: space-between; align-items: center; 
+        padding: 20px 0; border-bottom: 1px solid #333; margin-bottom: 30px;
+    }
+    .brand { font-size: 24px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+    
+    /* --- Forms --- */
+    .form-card { 
+        background: var(--bg-card); padding: 30px; border-radius: 16px; 
+        border: 1px solid #333; margin-bottom: 40px;
+    }
+    .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    
+    .input-group { margin-bottom: 18px; }
+    .input-group label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
+    .input-group input, .input-group select, .input-group textarea {
+        width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333;
+        color: #fff; border-radius: 8px; font-family: 'Prompt'; font-size: 15px;
+        transition: 0.3s;
+    }
+    .input-group input:focus { border-color: var(--primary); outline: none; }
+    
+    .note { font-size: 12px; color: #f39c12; margin-top: 5px; display: none; }
+    
+    /* --- Buttons --- */
+    .btn { 
+        padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; 
+        font-family: 'Prompt'; font-weight: 500; transition: 0.3s; 
+    }
+    .btn-primary { background: var(--primary); color: #fff; width: 100%; font-size: 16px; padding: 12px; }
+    .btn-primary:hover { background: #ff6a00; transform: translateY(-2px); }
+    .btn-danger { background: #d32f2f; color: #fff; }
+    .btn-secondary { background: #333; color: #ccc; }
+    .btn-edit { background: #007bff; color: #fff; margin-right: 5px; }
+    
+    /* --- List --- */
+    .movie-item {
+        display: flex; gap: 20px; background: var(--bg-card);
+        padding: 15px; border-radius: 12px; margin-bottom: 15px;
+        border: 1px solid #222; align-items: center;
+    }
+    .movie-thumb { width: 70px; height: 100px; object-fit: cover; border-radius: 8px; background: #333; }
+    .movie-info { flex-grow: 1; }
+    .movie-info h3 { margin: 0 0 5px 0; color: #fff; font-size: 18px; }
+    .badge { 
+        font-size: 12px; padding: 3px 8px; border-radius: 4px; 
+        background: #333; color: #aaa;
+    }
+    .actions { display: flex; gap: 10px; }
+
+    @media (max-width: 600px) {
+        .grid-2 { grid-template-columns: 1fr; }
+        .movie-item { flex-direction: column; text-align: center; }
+        .actions { width: 100%; justify-content: center; margin-top: 10px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Login Overlay -->
+<div id="login-screen">
+    <div class="login-box">
+        <span class="login-logo">🔒</span>
+        <h2 style="margin-top:0;">เข้าสู่ระบบผู้ดูแล</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="อีเมล (Email)" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="รหัสผ่าน (Password)" required>
+            </div>
+            <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
+        </form>
+        <div style="text-align: center; color: #888; margin: 20px 0;">หรือ</div>
+        <button id="googleSignInBtn" class="btn" style="width:100%; background: #4285F4; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; padding: 12px;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="height: 18px; background: white; padding: 2px; border-radius: 50%;">
+            เข้าสู่ระบบด้วย Google
+        </button>
+    </div>
+</div>
+
+<!-- Main Dashboard -->
+<div id="dashboard-screen" class="container">
+    <div class="header">
+        <div class="brand">🎬 DUYDODEE Admin</div>
+        <button id="logoutBtn" class="btn btn-danger">ออกจากระบบ</button>
+    </div>
+
+    <div class="form-card">
+        <div class="form-header">
+            <h2 id="formTitle" style="margin:0;">➕ เพิ่มเนื้อหาใหม่</h2>
+            <button id="cancelEditBtn" class="btn btn-secondary" style="display:none;">ยกเลิกการแก้ไข</button>
+        </div>
+        
+        <form id="movieForm">
+            <input type="hidden" id="editDocId"> <!-- เก็บ ID เวลาแก้ไข -->
+            
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>หมวดหมู่ (Category)</label>
+                    <select id="category" required onchange="checkCategory()">
+                        <option value="movie">🎬 ภาพยนตร์แนะนำ</option>
+                        <option value="chinese_series_dubbed">🔥 ซีรีส์จีนพากย์ไทย</option>
+                        <option value="chinese_series_vertical">📱 ซีรีส์จีนแนวตั้ง (Short Drama)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>ชื่อเรื่อง (Title)</label>
+                    <input type="text" id="title" placeholder="เช่น องค์รักษ์เสื้อแพร..." required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>รูปโปสเตอร์ (Poster URL) - แนวตั้ง</label>
+                    <input type="url" id="poster" placeholder="https://..." required>
+                </div>
+                <div class="input-group">
+                    <label>รูปแบนเนอร์ (Banner URL) - แนวนอน *ไม่บังคับ</label>
+                    <input type="url" id="banner" placeholder="ใช้สำหรับพื้นหลังหน้าเว็บ...">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ลิงก์รับชม (Video URL / Link)</label>
+                <input type="text" id="link" placeholder="URL หน้าเว็บปลายทาง หรือ YouTube Link" required>
+                <p id="verticalNote" class="note">⚠️ สำหรับซีรีส์แนวตั้ง: กรุณาใส่ลิงก์ YouTube (เช่น https://youtu.be/...) ระบบจะแปลงเป็น Embed ให้อัตโนมัติ</p>
+            </div>
+
+            <div class="input-group">
+                <label>เรื่องย่อ / รายละเอียด (Description)</label>
+                <textarea id="desc" rows="3" placeholder="รายละเอียดสั้นๆ เกี่ยวกับหนัง..."></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary">บันทึกข้อมูล</button>
+        </form>
+    </div>
+
+    <div class="movie-list">
+        <h3 style="border-left: 4px solid var(--primary); padding-left: 10px;">รายการเนื้อหาทั้งหมด</h3>
+        <div id="movieListContainer">กำลังโหลดข้อมูล...</div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<script>
+    // Config เดิม 100%
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcCn0NGbakHmLEa_G47K8OepGaRqTV02Q",
+      authDomain: "duydodeesport.firebaseapp.com",
+      projectId: "duydodeesport",
+      storageBucket: "duydodeesport.appspot.com",
+      messagingSenderId: "435929814225",
+      appId: "1:435929814225:web:fcb01803d9e5b77340e1f0",
+      measurementId: "G-JD1MFCNLY0"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // --- UI Variables ---
+    const loginScreen = document.getElementById('login-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
+    const movieForm = document.getElementById('movieForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formTitle = document.getElementById('formTitle');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editDocIdInput = document.getElementById('editDocId');
+
+    // --- Auth Logic ---
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            loginScreen.style.display = 'none';
+            dashboardScreen.style.display = 'block';
+            loadMovies();
+        } else {
+            loginScreen.style.display = 'flex';
+            dashboardScreen.style.display = 'none';
+        }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        auth.signInWithEmailAndPassword(email, password)
+            .catch(error => alert("เข้าสู่ระบบไม่สำเร็จ: " + error.message));
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+
+    document.getElementById('googleSignInBtn').addEventListener('click', () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).catch(error => {
+            alert('Google Sign-In Error: ' + error.message);
+        });
+    });
+
+    // --- Helper UI ---
+    window.checkCategory = function() {
+        const cat = document.getElementById('category').value;
+        const note = document.getElementById('verticalNote');
+        note.style.display = (cat === 'chinese_series_vertical') ? 'block' : 'none';
+    }
+
+    // --- CRUD Logic ---
+    movieForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'กำลังบันทึก...';
+
+        const docId = editDocIdInput.value; // ถ้ามีค่าแสดงว่ากำลังแก้ไข
+        const data = {
+            category: document.getElementById('category').value,
+            title: document.getElementById('title').value,
+            poster: document.getElementById('poster').value,
+            banner: document.getElementById('banner').value,
+            desc: document.getElementById('desc').value,
+            link: document.getElementById('link').value,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp() // อัปเดตเวลาด้วย
+        };
+
+        try {
+            if (docId) {
+                // Update
+                await db.collection('movies').doc(docId).update(data);
+                alert('แก้ไขข้อมูลเรียบร้อย!');
+                resetForm();
+            } else {
+                // Add New
+                await db.collection('movies').add(data);
+                alert('เพิ่มเนื้อหาใหม่เรียบร้อย!');
+                movieForm.reset();
+                checkCategory();
+            }
+        } catch (error) {
+            console.error(error);
+            alert('เกิดข้อผิดพลาด: ' + error.message);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = docId ? 'บันทึกการแก้ไข' : 'บันทึกข้อมูล';
+        }
+    });
+
+    // --- List & Actions ---
+    function loadMovies() {
+        const container = document.getElementById('movieListContainer');
+        db.collection('movies').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            container.innerHTML = '';
+            if(snapshot.empty) {
+                container.innerHTML = '<p style="text-align:center; color:#666;">ยังไม่มีข้อมูล</p>';
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                const div = document.createElement('div');
+                div.className = 'movie-item';
+                div.innerHTML = `
+                    <img src="${item.poster || 'https://via.placeholder.com/100'}" class="movie-thumb" alt="Poster">
+                    <div class="movie-info">
+                        <div class="badge">${getCatName(item.category)}</div>
+                        <h3>${item.title}</h3>
+                        <div style="font-size:13px; color:#888;">${item.link ? '🔗 มีลิงก์แล้ว' : '❌ ไม่มีลิงก์'}</div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-edit" onclick="startEdit('${doc.id}')">✏️ แก้ไข</button>
+                        <button class="btn btn-danger" onclick="deleteMovie('${doc.id}', '${item.title}')">🗑️ ลบ</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        });
+    }
+
+    // --- Edit Mode ---
+    window.startEdit = async function(id) {
+        try {
+            const doc = await db.collection('movies').doc(id).get();
+            if(!doc.exists) return;
+            const data = doc.data();
+
+            // Populate Form
+            editDocIdInput.value = id;
+            document.getElementById('category').value = data.category;
+            document.getElementById('title').value = data.title;
+            document.getElementById('poster').value = data.poster;
+            document.getElementById('banner').value = data.banner || '';
+            document.getElementById('desc').value = data.desc || '';
+            document.getElementById('link').value = data.link || '';
+            
+            checkCategory();
+
+            // UI Change
+            formTitle.textContent = '✏️ แก้ไขข้อมูล: ' + data.title;
+            submitBtn.textContent = 'บันทึกการแก้ไข';
+            submitBtn.className = 'btn btn-edit'; // เปลี่ยนสีปุ่ม
+            cancelEditBtn.style.display = 'block';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    cancelEditBtn.addEventListener('click', resetForm);
+
+    function resetForm() {
+        movieForm.reset();
+        editDocIdInput.value = '';
+        formTitle.textContent = '➕ เพิ่มเนื้อหาใหม่';
+        submitBtn.textContent = 'บันทึกข้อมูล';
+        submitBtn.className = 'btn btn-primary';
+        cancelEditBtn.style.display = 'none';
+        checkCategory();
+    }
+
+    // --- Delete ---
+    window.deleteMovie = function(id, title) {
+        if(confirm(`ยืนยันการลบ "${title}" ?\nการกระทำนี้ไม่สามารถย้อนกลับได้`)) {
+            db.collection('movies').doc(id).delete().catch(err => alert(err.message));
+        }
+    }
+
+    function getCatName(cat) {
+        const names = {
+            'movie': 'ภาพยนตร์',
+            'chinese_series_dubbed': 'ซีรีส์พากย์ไทย',
+            'chinese_series_vertical': 'ซีรีส์แนวตั้ง'
+        };
+        return names[cat] || cat;
+    }
+</script>
+
+</body>
+</html>

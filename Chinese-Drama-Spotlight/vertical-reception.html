@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Vertical Series - DUYDODEE-HD</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary: #ff4e00;
+    --primary-glow: rgba(255, 78, 0, 0.5);
+    --bg-dark: #050505;
+}
+
+* { box-sizing: border-box; }
+body {
+    margin: 0; font-family: 'Prompt', sans-serif; color: #fff;
+    background: var(--bg-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* Background Aura */
+.bg-aura {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 80vw; height: 80vw; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+    filter: blur(100px); z-index: -1; pointer-events: none; opacity: 0.3;
+}
+
+.loading-state { margin-top: 40vh; font-size: 20px; text-align: center; }
+
+/* Main Content Container */
+.container {
+    max-width: 500px; width: 95%;
+    margin: 40px auto;
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header Section */
+.header { text-align: center; margin-bottom: 30px; }
+.vip-logo { width: 120px; filter: drop-shadow(0 0 10px var(--primary)); margin-bottom: 15px; }
+.badge { background: var(--primary); color: #fff; padding: 4px 15px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; display: inline-block; margin-bottom: 10px; }
+.movie-title { font-size: 24px; font-weight: 600; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+
+/* Video Player - Optimized for Vertical Content */
+.player-wrapper {
+    background: #000;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 78, 0, 0.4);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(255, 78, 0, 0.1);
+    position: relative;
+    padding-bottom: 177.77%; /* 9:16 Aspect Ratio */
+    height: 0;
+    margin-bottom: 25px;
+}
+.player-wrapper iframe {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; border: 0;
+}
+
+/* Info Section */
+.info-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+}
+.info-card h3 { margin-top: 0; font-size: 18px; color: var(--primary); }
+.info-card p { margin: 0; font-size: 15px; color: #ccc; line-height: 1.6; }
+
+/* Actions */
+.actions { text-align: center; }
+.btn-back {
+    display: inline-block;
+    padding: 12px 30px;
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+.btn-back:hover { color: #fff; }
+
+@media (max-width: 480px) {
+    .container { margin: 20px auto; }
+    .movie-title { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-aura"></div>
+
+<div id="loadingState" class="loading-state">
+    🎬 กำลังเปิดโรงภาพยนตร์ VIP สำหรับคุณ...
+</div>
+
+<div id="mainContent" class="container" style="display: none;">
+    <div class="header">
+        <img src="https://api.clippingmagic.com/v1/images/69865063-8636-4740-994c-83607062227d/preview.jpg" alt="DUYDODEE Logo" class="vip-logo">
+        <br>
+        <div class="badge">VERTICAL SERIES VIP</div>
+        <h1 id="movieTitle" class="movie-title">ชื่อซีรีส์</h1>
+    </div>
+
+    <!-- Video Player Area -->
+    <div id="videoArea" class="player-wrapper">
+        <!-- iframe will be injected here -->
+    </div>
+
+    <!-- Details Area -->
+    <div class="info-card">
+        <h3>เรื่องย่อ / รายละเอียด</h3>
+        <p id="movieDesc">กำลังโหลดรายละเอียด...</p>
+    </div>
+
+    <div class="actions">
+        <a href="index.html" class="btn-back">← กลับหน้าหลัก</a>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAcCn0NGbakHmLEa_G47K8OepGaRqTV02Q",
+      authDomain: "duydodeesport.firebaseapp.com",
+      projectId: "duydodeesport",
+      storageBucket: "duydodeesport.appspot.com",
+      appId: "1:435929814225:web:fcb01803d9e5b77340e1f0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // ดึงไอดีจาก URL
+    const params = new URLSearchParams(window.location.search);
+    const movieId = params.get("id");
+
+    async function loadVerticalContent() {
+        if (!movieId) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        try {
+            const doc = await db.collection('movies').doc(movieId).get();
+            if (doc.exists) {
+                const data = doc.data();
+                
+                // ตั้งค่าหัวข้อหน้าเว็บ
+                document.title = "รับชม VIP: " + data.title;
+                document.getElementById('movieTitle').innerText = data.title;
+                document.getElementById('movieDesc').innerText = data.desc || "ไม่มีข้อมูลรายละเอียดภาพยนตร์";
+                
+                // --- ส่วนจัดการลิงค์ YouTube Embed ---
+                // แปลงลิงค์ YouTube ปกติให้เป็น Embed ลิงค์ (ถูกกฎหมาย)
+                let videoUrl = data.link || "";
+                let embedUrl = "";
+
+                if (videoUrl.includes("youtube.com/watch?v=")) {
+                    embedUrl = videoUrl.replace("watch?v=", "embed/");
+                } else if (videoUrl.includes("youtu.be/")) {
+                    embedUrl = videoUrl.replace("youtu.be/", "youtube.com/embed/");
+                } else if (videoUrl.includes("embed/")) {
+                    embedUrl = videoUrl;
+                } else {
+                    // หากไม่ใช่ลิงค์ YouTube มาตรฐาน สามารถจัดการ Logic เพิ่มเติมได้ที่นี่
+                    embedUrl = videoUrl; 
+                }
+
+                // ฝัง iframe ลงในหน้าเว็บ
+                if (embedUrl) {
+                    document.getElementById('videoArea').innerHTML = `
+                        <iframe 
+                            src="${embedUrl}?autoplay=0&rel=0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    `;
+                } else {
+                    document.getElementById('videoArea').innerHTML = `
+                        <div style="display:flex; align-items:center; justify-content:center; height:100%; padding:20px; text-align:center; color:#666;">
+                            ไม่พบแหล่งที่มาของวิดีโอ
+                        </div>
+                    `;
+                }
+
+                // แสดงเนื้อหา
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+
+                // เปลี่ยนพื้นหลังตาม Banner (ถ้ามี)
+                if (data.banner) {
+                    document.body.style.backgroundImage = `linear-gradient(rgba(5,5,5,0.9), rgba(5,5,5,0.9)), url("${data.banner}")`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    document.body.style.backgroundAttachment = 'fixed';
+                }
+
+            } else {
+                window.location.href = 'index.html';
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById('loadingState').innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล";
+        }
+    }
+
+    // เริ่มทำงาน
+    loadVerticalContent();
+</script>
+</body>
+</html>

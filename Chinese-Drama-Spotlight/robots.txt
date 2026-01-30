@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://duydodeesport.web.app/sitemap.xml

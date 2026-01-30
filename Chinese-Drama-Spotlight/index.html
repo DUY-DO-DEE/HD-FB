@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUYDODEE-HD - ดูหนัง-ซีรีส์ออนไลน์ฟรี</title>
+<link rel="icon" type="image/png" href="logo.png">
+<meta name="description" content="DUYDODEE-HD เว็บดูหนังและซีรีส์ออนไลน์ฟรี อัปเดตใหม่ล่าสุดก่อนใคร">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&family=Jura:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero" id="hero_banner">
+    <img src="banner.jpg" alt="DUYDODEE-HD Logo" class="main-logo">
+</header>
+
+<nav class="navbar">
+    <a href="#movies_section">🎬 หนังแนะนำ</a>
+    <a href="#dubbed_series_section">🔥 ซีรีส์พากย์ไทย</a>
+    <a href="#vertical_series_section">📱 ซีรีส์แนวตั้ง</a>
+</nav>
+
+<main class="main-content">
+    <section id="movies_section" class="section">
+        <h2>🎬 ภาพยนตร์แนะนำ</h2>
+        <div class="movie-grid" id="movies_grid"></div>
+    </section>
+
+    <section id="dubbed_series_section" class="section">
+        <h2>🔥 ซีรีส์จีนพากย์ไทยยอดฮิต</h2>
+        <div class="movie-grid" id="dubbed_series_grid"></div>
+    </section>
+
+    <section id="vertical_series_section" class="section">
+        <h2>📱 ซีรีส์จีนแนวตั้ง</h2>
+        <div class="movie-grid" id="vertical_series_grid"></div>
+    </section>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="main.js" defer></script>
+</body>
+</html>
