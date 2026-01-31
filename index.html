@@ -1,44 +1,85 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DUYDODEE-HD - ดูหนัง-ซีรีส์ออนไลน์ฟรี</title>
-<link rel="icon" type="image/png" href="logo.png">
-<meta name="description" content="DUYDODEE-HD เว็บดูหนังและซีรีส์ออนไลน์ฟรี อัปเดตใหม่ล่าสุดก่อนใคร">
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&family=Jura:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuyDoDee-HD</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 font-weight=%22bold%22 font-family=%22Jura%22 fill=%22%23d4af37%22>DD</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@700&family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
-<header class="hero" id="hero_banner">
-</header>
+    <div class="top-bar"></div>
 
-<nav class="navbar">
-    <a href="#movies_section">🎬 หนังแนะนำ</a>
-    <a href="#dubbed_series_section">🔥 ซีรีส์พากย์ไทย</a>
-    <a href="#vertical_series_section">📱 ซีรีส์แนวตั้ง</a>
-</nav>
+    <nav class="navbar">
+        <a href="/" class="navbar-logo">DUYDODEE-HD</a>
+        <div class="nav-links">
+            <a href="#movies">ภาพยนตร์แนะนำ</a>
+            <a href="#dubbed-series">ซีรีส์จีนพากย์ไทย</a>
+            <a href="#vertical-series">ซีรีส์จีนแนวตั้ง</a>
+        </div>
+        <div class="nav-right">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="ค้นหาภาพยนตร์หรือซีรีส์...">
+            </div>
+            <a href="user-login.html" class="community-button">
+                <i class="fas fa-users"></i>
+            </a>
+            <div id="user-profile" class="user-profile" style="display: none;"></div>
+        </div>
+    </nav>
 
-<main class="main-content">
-    <section id="movies_section" class="section">
-        <h2>🎬 ภาพยนตร์แนะนำ</h2>
-        <div class="movie-grid" id="movies_grid"></div>
-    </section>
+    <header class="hero" id="hero_banner">
+        <div class="hero-content">
+            <h1 id="hero-title">Title from DB</h1>
+            <p id="hero-subtitle">Subtitle from DB or default text.</p>
+        </div>
+    </header>
 
-    <section id="dubbed_series_section" class="section">
-        <h2>🔥 ซีรีส์จีนพากย์ไทยยอดฮิต</h2>
-        <div class="movie-grid" id="dubbed_series_grid"></div>
-    </section>
+    <main class="main-content">
+        <section id="movies" class="section">
+            <h2><i class="fas fa-film"></i> ภาพยนตร์แนะนำ</h2>
+            <div class="movie-grid" id="movies_grid"></div>
+        </section>
 
-    <section id="vertical_series_section" class="section">
-        <h2>📱 ซีรีส์จีนแนวตั้ง</h2>
-        <div class="movie-grid" id="vertical_series_grid"></div>
-    </section>
-</main>
+        <section id="dubbed-series" class="section">
+            <h2><i class="fas fa-fire"></i> ซีรีส์จีนพากย์ไทย</h2>
+            <div class="movie-grid" id="dubbed_series_grid"></div>
+        </section>
 
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="main.js" defer></script>
+        <section id="vertical-series" class="section">
+            <h2><i class="fas fa-mobile-alt"></i> ซีรีส์จีนแนวตั้ง</h2>
+            <div class="movie-grid" id="vertical_series_grid"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 DuyDoDee-HD. All rights reserved.</p>
+            <p>แหล่งรวมความบันเทิงครบวงจรสำหรับคนรักหนังและซีรีส์</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="main.js"></script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { initializeAuth } from './auth-manager.js';
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAcCn0NGbakHmLEa_G47K8OepGaRqTV02Q",
+          authDomain: "duydodeesport.firebaseapp.com",
+          projectId: "duydodeesport",
+          storageBucket: "duydodeesport.appspot.com",
+          messagingSenderId: "435929814225",
+          appId: "1:435929814225:web:fcb01803d9e5b77340e1f0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        initializeAuth(app);
+    </script>
 </body>
 </html>

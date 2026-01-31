@@ -167,7 +167,6 @@ body {
                 document.getElementById('movieDesc').innerText = data.desc || "ไม่มีข้อมูลรายละเอียดภาพยนตร์";
                 
                 // --- ส่วนจัดการลิงค์ YouTube Embed ---
-                // แปลงลิงค์ YouTube ปกติให้เป็น Embed ลิงค์ (ถูกกฎหมาย)
                 let videoUrl = data.link || "";
                 let embedUrl = "";
 
@@ -178,7 +177,6 @@ body {
                 } else if (videoUrl.includes("embed/")) {
                     embedUrl = videoUrl;
                 } else {
-                    // หากไม่ใช่ลิงค์ YouTube มาตรฐาน สามารถจัดการ Logic เพิ่มเติมได้ที่นี่
                     embedUrl = videoUrl; 
                 }
 

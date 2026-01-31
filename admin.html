@@ -111,11 +111,6 @@
             </div>
             <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
         </form>
-        <div style="text-align: center; color: #888; margin: 20px 0;">หรือ</div>
-        <button id="googleSignInBtn" class="btn" style="width:100%; background: #4285F4; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; padding: 12px;">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="height: 18px; background: white; padding: 2px; border-radius: 50%;">
-            เข้าสู่ระบบด้วย Google
-        </button>
     </div>
 </div>
 
@@ -233,13 +228,6 @@
 
     document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
 
-    document.getElementById('googleSignInBtn').addEventListener('click', () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).catch(error => {
-            alert('Google Sign-In Error: ' + error.message);
-        });
-    });
-
     // --- Helper UI ---
     window.checkCategory = function() {
         const cat = document.getElementById('category').value;
@@ -309,8 +297,8 @@
                         <div style="font-size:13px; color:#888;">${item.link ? '🔗 มีลิงก์แล้ว' : '❌ ไม่มีลิงก์'}</div>
                     </div>
                     <div class="actions">
-                        <button class="btn btn-edit" onclick="startEdit('${doc.id}')">✏️ แก้ไข</button>
-                        <button class="btn btn-danger" onclick="deleteMovie('${doc.id}', '${item.title}')">🗑️ ลบ</button>
+                        <button class="btn btn-edit" onclick="startEdit('''${doc.id}''')">✏️ แก้ไข</button>
+                        <button class="btn btn-danger" onclick="deleteMovie('''${doc.id}''', '''${item.title}''')">🗑️ ลบ</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -364,7 +352,8 @@
 
     // --- Delete ---
     window.deleteMovie = function(id, title) {
-        if(confirm(`ยืนยันการลบ "${title}" ?\nการกระทำนี้ไม่สามารถย้อนกลับได้`)) {
+        if(confirm(`ยืนยันการลบ "${title}" ?
+การกระทำนี้ไม่สามารถย้อนกลับได้`)) {
             db.collection('movies').doc(id).delete().catch(err => alert(err.message));
         }
     }
